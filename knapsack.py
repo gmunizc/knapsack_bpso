@@ -34,7 +34,7 @@ def fitness_per_particle(mask):
     value = 1 / value
 
     if weight > knapsack_dict["max_weight"]:
-        value = 9999999999
+        value = 9999999999*value*weight
 
     return value
 
@@ -47,8 +47,13 @@ def fitness_function(x):
 
 def bpso_solution(best_pos):
     sum_values = 0
+    weight = 0
     for idx, bit in enumerate(best_pos):
         sum_values += bit * knapsack_dict["values"][idx]
+        weight += + bit * knapsack_dict["weights"][idx]
+
+    if weight > knapsack_dict["max_weight"]:
+        sum_values = "Knapsack Exploded"
 
     return sum_values
 
