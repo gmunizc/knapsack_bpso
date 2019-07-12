@@ -1,6 +1,7 @@
 import argparse
 import pyswarms as ps
 import numpy as np
+import datetime
 
 knapsack_dict = {}
 
@@ -66,15 +67,22 @@ def main(args):
     # Set-up hyperparameters
     options = {'c1': args.c1, 'c2': args.c2, 'w': args.w, 'k': args.k, 'p': args.p}
     # Call instance of PSO
-    dimensions = len(knapsack_dict["values"])  # dimensions should be the number of features
+    dimensions = len(knapsack_dict["values"])
     optimizer = ps.discrete.BinaryPSO(n_particles=args.n_particles, dimensions=dimensions, options=options)
     # Perform optimization
+    bpso_before = datetime.datetime.now()
     best_cost, best_pos = optimizer.optimize(fitness_function, iters=args.iters)
+    bpso_after = datetime.datetime.now() - bpso_before
+    non_bpso_before = datetime.datetime.now()
     non_bpso_solution = knapsack_solver(knapsack_dict["max_weight"], knapsack_dict["weights"],
                                         knapsack_dict["values"], len(knapsack_dict["values"]))
+    non_bpso_after = datetime.datetime.now() - non_bpso_before
 
     print("BPSO Solution: {0}".format(bpso_solution(best_pos)))
+
+    print("Time BPSO: {0}".format(bpso_after))
     print("Non-BPSO Solution: {0}".format(non_bpso_solution))
+    print("Time Non-BPSO: {0}".format(non_bpso_after))
 
 
 if __name__ == '__main__':
